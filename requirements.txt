@@ -13,7 +13,6 @@ APScheduler==3.11.0
 arabic-reshaper==3.0.0
 asgiref==3.8.1
 attrs==25.1.0
-audioop-lts==0.2.1
 audioread==3.0.1
 Authlib==1.5.1
 babel==2.17.0
