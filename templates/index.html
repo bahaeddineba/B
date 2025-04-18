@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>الشفاء +</title>
+    
+    <!-- رابط الأيقونة المصغرة للموقع (Favicon) -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/stethoscope.png') }}">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+
+
+
+</head>
+
+<body>
+    <div id="disclaimer-modal" class="modal" style="
+        display: none; 
+        position: fixed; 
+        z-index: 9999; 
+        left: 0; 
+        top: 0; 
+        width: 100%; 
+        height: 100%; 
+        background-color: rgba(0,0,0,0.7); 
+        align-items: center; 
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    ">
+        <div class="modal-content" style="
+            background-color: #fefefe; 
+            padding: 30px; 
+            border: 2px solid #20efcc;
+            width: 90%; 
+            max-width: 500px; 
+            border-radius: 15px; 
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        ">
+            <h2 style="color: #ff0000; margin-bottom: 20px;">تحذير هام ⚠️</h2>
+            <p style="margin-bottom: 20px;">
+                هذا التطبيق مصمم كمساعد استشاري فقط ولا يحل محل الرعاية الطبية المهنية.
+            </p>
+            <ul style="
+                text-align: right; 
+                direction: rtl; 
+                list-style-type: disc; 
+                padding-right: 30px;
+                margin-bottom: 20px;
+            ">
+                <li>التطبيق لا يقدم تشخيصًا طبيًا نهائيًا</li>
+                <li>يجب استشارة الطبيب المختص دائمًا</li>
+                <li>المعلومات المقدمة استشارية وليست بديلاً عن الفحص الطبي المباشر</li>
+                <li>في حالات الطوارئ، اتصل بالخدمات الطبية الفورية</li>
+            </ul>
+            <div>
+                <button onclick="acceptDisclaimer()" style="
+                    background-color:#20efcc;
+                    color: white; 
+                    padding: 10px 20px; 
+                    border: none; 
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                ">
+                    أوافق وأتفهم
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function showDisclaimer() {
+        const disclaimerModal = document.getElementById('disclaimer-modal');
+        
+        localStorage.removeItem('disclaimer_accepted');
+        
+        disclaimerModal.style.display = 'flex';
+        
+        setTimeout(() => {
+            disclaimerModal.style.opacity = '1';
+        }, 10);
+    }
+
+    function acceptDisclaimer() {
+        const disclaimerModal = document.getElementById('disclaimer-modal');
+        
+        localStorage.setItem('disclaimer_accepted', 'true');
+        
+        disclaimerModal.style.opacity = '0';
+        
+        setTimeout(() => {
+            disclaimerModal.style.display = 'none';
+        }, 300);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        showDisclaimer();
+    });
+    </script>
+
+    <div class="chat-container">
+        <div class="chat-header">
+
+            <link href="https://fonts.googleapis.com/css2?family=Mirza&display=swap" rel="stylesheet">
+            <h4>الشفاء +</h4>
+            <style>
+                h4{
+                    font-size: 37px; 
+                    font-family: 'Mirza', sans-serif;
+                }
+            </style>
+
+            
+            <div class="header-icons">
+                <i class="fas fa-info-circle" title="معلومات"></i>
+                <i class="fas fa-map-marker-alt" id="mapIcon" title="عرض أطباء الجزائر"></i>
+            </div>
+        </div>
+        
+        <div id="mapContainer" class="map-container" style="display: none;">
+            <div class="doctor-search-container">
+                <input type="text" id="doctorSearchInput" placeholder="ابحث عن طبيب بالعنوان أو التخصص...">
+                <button id="doctorSearchButton">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div id="doctorMap" class="doctor-map"></div>
+            <div id="doctorInfo" class="doctor-info"></div>
+        </div>
+        
+
+<div id="doctorInfo" class="doctor-info">
+    {% for doctor in doctors %}
+        <div class="doctor-card">
+            <h3>{{ doctor.name }}</h3>
+            <p>التخصص: {{ doctor.specialty }}</p>
+            <p>العنوان: {{ doctor.address }}</p>
+            <p>الهاتف: {{ doctor.phone }}</p>
+            <p>التقييم: {{ generateStarRating(doctor.rating) }}</p>
+            <button onclick="navigateToDoctor({{ doctor.latitude }}, {{ doctor.longitude }})">الوصول للطبيب</button>
+            <button onclick="bookAppointment('{{ doctor.name }}', '{{ doctor.specialty }}')">حجز موعد</button>
+        </div>
+    {% endfor %}
+</div>
+
+        <div class="chat-body">
+            <div class="messages" id="chatMessages">
+            </div>
+        </div>
+        
+        <div class="chat-input-area">
+            <div class="input-group">
+                <input type="text" id="userInput" placeholder="اكتب سؤالك هنا...">
+                
+                <button id="sendButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

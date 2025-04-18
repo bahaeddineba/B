@@ -1,0 +1,486 @@
+:root {
+    --primary-color: #20efcc;
+    --secondary-color: #17e1c6;
+    --background-color: #f0f2f5;
+    --text-color: #333;
+    --bot-message-color: #ecf0f1;
+    --user-message-color: #19e3d9;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+body {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    background-color: var(--background-color);
+    direction: rtl;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.chat-container {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+    padding-top: 60px;
+}
+.chat-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.chat-header h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.chat-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: white;
+}
+.messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.message {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    position: relative;
+    clear: both;
+    word-wrap: break-word;
+    font-size: 0.9rem;
+}
+.bot-message {
+    background-color: var(--bot-message-color);
+    color: var(--text-color);
+    align-self: flex-start;
+}
+.user-message {
+    background-color: var(--user-message-color);
+    color: white;
+    align-self: flex-end;
+}
+
+.chat-input-area {
+    background-color: white;
+    padding: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+.input-group {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+    padding: 10px;
+}
+
+#userInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+#sendButton {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#sendButton:hover {
+    background-color: #11ced1;
+}
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    margin-top: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+}
+
+.doctor-map {
+    width: 100%;
+    height: 400px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.doctor-info {
+    background-color: #ffffff;
+    padding: 15px;
+    max-height: 200px;
+    overflow-y: auto;
+    direction: rtl;
+}
+
+.doctor-info div {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f1f3f5;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.doctor-info button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.doctor-info button:hover {
+    background-color: #0056b3;
+}
+
+#mapIcon {
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 1.2em;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+
+#mapIcon:hover {
+    color: #0056b3;
+}
+
+.doctor-search-container {
+    display: flex;
+    margin: 10px;
+    gap: 10px;
+    background-color: white;
+    padding: 10px;
+    border-bottom: 1px solid #e9ecef;
+    position: fixed;  /* تثبيت الموضع */
+    top: 0;           /* لصقه بأعلى الصفحة */
+    left: 0;          /* لصقه بالجانب الأيسر */
+    width: 100%;      /* عرض كامل الشاشة */
+    z-index: 1000;    /* التأكد من ظهوره فوق العناصر الأخرى */
+    background-color: var(--background-color); /* لون خلفية متناسق مع التصميم */
+    padding: 10px;    /* مساحة داخلية للتنسيق */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* ظل خفيف للتمييز */
+}
+
+#doctorSearchInput {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+}
+
+#doctorSearchButton {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#doctorSearchButton:hover {
+    background-color: #11ced1;
+}
+
+#doctorSearchButton i {
+    margin: 0;
+}
+
+.doctor-popup {
+    text-align: right;
+    direction: rtl;
+    font-family: 'Cairo', sans-serif;
+}
+
+.doctor-popup strong {
+    color: #333;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.doctor-popup span {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.doctor-popup button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.doctor-popup button:hover {
+    background-color: #11ced1;
+}
+
+/* أنماط محسنة لنافذة حجز الموعد */
+.appointment-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.appointment-modal .modal-content {
+    background-color: white;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.appointment-modal .modal-header {
+    background-color: #11ced1;
+    color: white;
+    padding: 15px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.appointment-modal .modal-header .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.appointment-modal .modal-header .close-btn:hover {
+    color: #ff4d4d;
+}
+
+.appointment-modal .modal-body {
+    padding: 20px;
+}
+
+.appointment-modal .modal-body .specialty {
+    color: #666;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.appointment-modal .form-group {
+    margin-bottom: 15px;
+}
+
+.appointment-modal .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.appointment-modal .form-group input,
+.appointment-modal .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+}
+
+.appointment-modal .form-group input:focus,
+.appointment-modal .form-group textarea:focus {
+    border-color: #11ced1;
+    outline: none;
+}
+
+.appointment-modal .submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #11ced1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.appointment-modal .submit-btn:hover {
+    background-color: #20efcc;
+}
+
+/* تنسيق خاص للشاشات الصغيرة */
+@media (max-width: 600px) {
+    .chat-container {
+        width: 100%;         /* العرض الكامل للشاشة */
+        height: 100vh;       /* الارتفاع الكامل للشاشة */
+        margin: 0;           /* إزالة الهوامش الخارجية */
+        border-radius: 0;    /* إزالة تدوير الحواف */
+    }
+}
+
+/* أنماط نافذة التبرعات */
+.donation-icon {
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 1.2em;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+
+.donation-icon:hover {
+    color: #0056b3;
+}
+
+.donation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.donation-modal-content {
+    background-color: white;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.close-donation-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.close-donation-modal:hover {
+    color: #ff4d4d;
+}
+
+.donation-options {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.donation-option {
+    flex: 1;
+    text-align: center;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.donation-option:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.donation-option i {
+    font-size: 3em;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.donation-option h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.donation-option p {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.donation-option button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.donation-option button:hover {
+    background-color: #11ced1;
+}
+
+.message {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s;
+}
+.message.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
