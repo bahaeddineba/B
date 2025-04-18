@@ -22,19 +22,22 @@ document.addEventListener('DOMContentLoaded', () => {
      * @returns {HTMLElement} 
      */
     function createMessageElement(content, type) {
-
+        // إنشاء عنصر الرسالة الرئيسي
         const messageElement = document.createElement('div');
         messageElement.classList.add('message', `${type}-message`);
         
+        // إنشاء عنصر محتوى الرسالة
         const messageContent = document.createElement('div');
         messageContent.classList.add('message-content');
         
+        // معالجة التنسيقات المتقدمة
         const processedContent = content
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
-            .replace(/__(.*?)__/g, '<u>$1</u>') 
-            .replace(/`(.*?)`/g, '<code>$1</code>') 
-            .replace(/\n/g, '<br>'); 
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // خط عريض
+            .replace(/__(.*?)__/g, '<u>$1</u>') // خط تحته
+            .replace(/`(.*?)`/g, '<code>$1</code>') // كود
+            .replace(/\n/g, '<br>'); // سطر جديد
 
+        // إضافة تنسيق للروابط
         const linkifiedContent = processedContent.replace(
             /https?:\/\/[^\s]+/g, 
             (url) => `<a href="${url}" target="_blank" class="message-link">${url}</a>`
@@ -540,7 +543,7 @@ function fetchDoctorLocations() {
 
     // معالج حدث زر المعلومات
     infoIcon.addEventListener('click', () => {
-        alert('الشفاء+ : نسخة تجريبية\n مصمم للمساعدة في الاستشارات الطبية');
+        alert('المساعد الطبي الذكي - نسخة تجريبية\nمصمم للمساعدة في الاستشارات الطبية العامة');
     });
 
     // معالج حدث تبديل الصوت
@@ -557,35 +560,41 @@ function fetchDoctorLocations() {
     donationIcon.innerHTML = '<i class="fas fa-hand-holding-heart" title="التبرعات"></i>';
     donationIcon.classList.add('donation-icon');
     donationIcon.addEventListener('click', showDonationModal);
-    document.querySelector('.header-icons').appendChild(donationIcon);
+    
+    // تحريك زر التبرعات بجانب زر الصوت
+    const headerIcons = document.querySelector('.header-icons');
+    headerIcons.insertBefore(donationIcon, voiceToggle.nextSibling);
 
     // دالة عرض نافذة التبرعات
     function showDonationModal() {
-        // إنشاء النافذة المنبثقة للتبرعات
+        // إنشاء النافذة المنبثقة للتبرعات مع تحسينات التجاوب
         const donationModal = document.createElement('div');
         donationModal.classList.add('donation-modal');
+        donationModal.setAttribute('aria-modal', 'true');
+        donationModal.setAttribute('role', 'dialog');
+        
         donationModal.innerHTML = `
-            <div class="donation-modal-content">
-                <span class="close-donation-modal">&times;</span>
+            <div class="donation-modal-content" role="document">
+                <span class="close-donation-modal" aria-label="إغلاق" tabindex="0">&times;</span>
                 <h2>التبرعات الطبية</h2>
                 <div class="donation-options">
-                    <div class="donation-option">
-                        <i class="fas fa-pills"></i>
+                    <div class="donation-option" data-type="medications">
+                        <i class="fas fa-pills" aria-hidden="true"></i>
                         <h3>التبرع بالأدوية</h3>
                         <p>ساهم في توفير الأدوية للمحتاجين</p>
-                        <button onclick="donateType('medications')">تبرع بالأدوية</button>
+                        <button onclick="donateType('medications')" aria-label="تبرع بالأدوية">تبرع بالأدوية</button>
                     </div>
-                    <div class="donation-option">
-                        <i class="fas fa-stethoscope"></i>
+                    <div class="donation-option" data-type="medical_equipment">
+                        <i class="fas fa-stethoscope" aria-hidden="true"></i>
                         <h3>المعدات الطبية</h3>
                         <p>تبرع بالمعدات الطبية لدعم المراكز الصحية</p>
-                        <button onclick="donateType('medical_equipment')">تبرع بالمعدات</button>
+                        <button onclick="donateType('medical_equipment')" aria-label="تبرع بالمعدات">تبرع بالمعدات</button>
                     </div>
-                    <div class="donation-option">
-                        <i class="fas fa-donate"></i>
+                    <div class="donation-option" data-type="monetary">
+                        <i class="fas fa-donate" aria-hidden="true"></i>
                         <h3>التبرع المالي</h3>
                         <p>ادعم برامج الرعاية الصحية</p>
-                        <button onclick="donateType('monetary')">تبرع مالي</button>
+                        <button onclick="donateType('monetary')" aria-label="تبرع مالي">تبرع مالي</button>
                     </div>
                 </div>
             </div>
@@ -599,38 +608,118 @@ function fetchDoctorLocations() {
         closeModal.addEventListener('click', () => {
             document.body.removeChild(donationModal);
         });
+
+        // دعم إغلاق النافذة بالضغط على Escape
+        donationModal.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                document.body.removeChild(donationModal);
+            }
+        });
+
+        // دعم إغلاق النافذة بالنقر خارج محتواها
+        donationModal.addEventListener('click', (event) => {
+            if (event.target === donationModal) {
+                document.body.removeChild(donationModal);
+            }
+        });
     }
 
     // دالة معالجة نوع التبرع
     function donateType(type) {
+        // تحسين التفاعل مع التبرعات
+        const donationModal = document.querySelector('.donation-modal');
+        const selectedOption = document.querySelector(`.donation-option[data-type="${type}"]`);
+        
+        // إضافة تأثير بصري للزر
+        selectedOption.classList.add('selected');
+        
         switch(type) {
             case 'medications':
-                alert('شكرًا لرغبتك في التبرع بالأدوية. سيتم التواصل معك قريبًا.');
+                showDonationConfirmation('شكرًا لرغبتك في التبرع بالأدوية', 'سيتم التواصل معك قريبًا لتنسيق التبرع');
                 break;
             case 'medical_equipment':
-                alert('شكرًا لرغبتك في التبرع بالمعدات الطبية. سيتم التواصل معك قريبًا.');
+                showDonationConfirmation('شكرًا لرغبتك في التبرع بالمعدات الطبية', 'سنقوم بمراجعة تبرعك وسيتم التواصل معك قريبًا');
                 break;
             case 'monetary':
-                alert('شكرًا لرغبتك في التبرع المالي. سيتم توجيهك إلى وسائل الدفع.');
+                showMonetaryDonationOptions();
                 break;
         }
     }
 
-    // تحميل مكتبة Leaflet
-    loadLeafletLibrary();
+    // دالة جديدة لعرض تأكيد التبرع
+    function showDonationConfirmation(title, message) {
+        const confirmationModal = document.createElement('div');
+        confirmationModal.classList.add('donation-confirmation-modal');
+        confirmationModal.innerHTML = `
+            <div class="confirmation-content">
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
+                <h3>${title}</h3>
+                <p>${message}</p>
+                <button onclick="this.closest('.donation-confirmation-modal').remove()">موافق</button>
+            </div>
+        `;
+        document.body.appendChild(confirmationModal);
+    }
 
-    // تحديد موقع المستخدم
-    getUserLocation();
+    // دالة لعرض خيارات التبرع المالي
+    function showMonetaryDonationOptions() {
+        const monetaryModal = document.createElement('div');
+        monetaryModal.classList.add('monetary-donation-modal');
+        monetaryModal.innerHTML = `
+            <div class="monetary-donation-content">
+                <h3>اختر طريقة التبرع المالي</h3>
+                <div class="payment-methods">
+                    <button onclick="processDonation('bank')">
+                        <i class="fas fa-university"></i> تحويل بنكي
+                    </button>
+                    <button onclick="processDonation('paypal')">
+                        <i class="fab fa-paypal"></i> PayPal
+                    </button>
+                    <button onclick="processDonation('credit')">
+                        <i class="fas fa-credit-card"></i> بطاقة الائتمان
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(monetaryModal);
+    }
 
-    // رسالة ترحيبية أولية
-    addMessage('مرحبًا! أنا مساعدك الطبي الذكي. كيف يمكنني مساعدتك اليوم؟', 'bot');
+    // دالة لمعالجة التبرع
+    function processDonation(method) {
+        switch(method) {
+            case 'bank':
+                showDonationConfirmation('التبرع البنكي', 'رقم الحساب: 1234567890');
+                break;
+            case 'paypal':
+                window.open('https://paypal.me/yourorganization', '_blank');
+                break;
+            case 'credit':
+                showCreditCardForm();
+                break;
+        }
+    }
 
-    // إيقاف الصوت تلقائياً عند مغادرة الصفحة
-    window.addEventListener('beforeunload', () => {
-        fetch('/stop_audio', {
-            method: 'POST'
-        });
-    });
+    // دالة لعرض نموذج بطاقة الائتمان
+    function showCreditCardForm() {
+        const creditCardModal = document.createElement('div');
+        creditCardModal.classList.add('credit-card-modal');
+        creditCardModal.innerHTML = `
+            <div class="credit-card-form">
+                <h3>نموذج بطاقة الائتمان</h3>
+                <form>
+                    <input type="text" placeholder="اسم حامل البطاقة" required>
+                    <input type="text" placeholder="رقم البطاقة" required>
+                    <div class="card-details">
+                        <input type="text" placeholder="تاريخ الانتهاء" required>
+                        <input type="text" placeholder="CVV" required>
+                    </div>
+                    <input type="number" placeholder="المبلغ" required>
+                    <button type="submit">تأكيد التبرع</button>
+                </form>
+            </div>
+        `;
+        document.body.appendChild(creditCardModal);
+    }
 
     // دالة حجز موعد مع الطبيب
     window.bookAppointment = function(doctorName, specialty) {
@@ -775,6 +864,7 @@ function fetchDoctorLocations() {
             });
         },
 
+        // تأثيرات بصرية متقدمة
         visualEffects: {
             messageTransitions() {
                 const observer = new IntersectionObserver((entries) => {
@@ -879,4 +969,20 @@ function fetchDoctorLocations() {
 
     // تشغيل المحسنات
     ChatEnhancer.init();
+
+    // تحميل مكتبة Leaflet
+    loadLeafletLibrary();
+
+    // تحديد موقع المستخدم
+    getUserLocation();
+
+    // رسالة ترحيبية أولية
+    addMessage('مرحبًا! أنا مساعدك الطبي الذكي. كيف يمكنني مساعدتك اليوم؟', 'bot');
+
+    // إيقاف الصوت تلقائياً عند مغادرة الصفحة
+    window.addEventListener('beforeunload', () => {
+        fetch('/stop_audio', {
+            method: 'POST'
+        });
+    });
 });
