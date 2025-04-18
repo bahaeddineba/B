@@ -27,3 +27,4 @@ SQLAlchemy>=2.0.25
 
 # Optional: To ensure compatibility with all common standard packages
 email-validator>=2.1.0.post1
+gunicorn>=21.2.0
