@@ -376,83 +376,81 @@ body {
 }
 
 /* أنماط نافذة التبرعات */
-.donation-icon {
-    cursor: pointer;
-    margin-right: 10px;
-    font-size: 1.2em;
-    color: #007bff;
-    transition: color 0.3s ease;
-}
-
-.donation-icon:hover {
-    color: #0056b3;
-}
-
 .donation-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .donation-modal-content {
-    background-color: white;
+    background-color: #fff;
     border-radius: 15px;
-    width: 90%;
-    max-width: 600px;
-    padding: 20px;
+    max-width: 95%;
+    width: 600px;
+    max-height: 90%;
+    overflow-y: auto;
+    padding: 30px;
+    text-align: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
 .close-donation-modal {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 15px;
+    right: 15px;
     font-size: 30px;
+    color: #888;
     cursor: pointer;
-    color: #999;
     transition: color 0.3s ease;
 }
 
 .close-donation-modal:hover {
-    color: #ff4d4d;
+    color: #333;
 }
 
 .donation-options {
     display: flex;
-    justify-content: space-between;
-    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
 }
 
 .donation-option {
     flex: 1;
-    text-align: center;
-    background-color: #f8f9fa;
+    min-width: 250px;
+    max-width: 300px;
+    background-color: #f9f9f947;
     border-radius: 10px;
-    padding: 20px;
+    padding: 25px;
+    text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .donation-option:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .donation-option i {
-    font-size: 3em;
-    color: var(--primary-color);
+    font-size: 50px;
+    color: #17e1c6;
     margin-bottom: 15px;
 }
 
 .donation-option h3 {
-    margin-bottom: 10px;
+    margin: 10px 0;
     color: #333;
 }
 
@@ -462,10 +460,10 @@ body {
 }
 
 .donation-option button {
-    background-color: var(--secondary-color);
+    background-color: #17e1c6;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -473,6 +471,44 @@ body {
 
 .donation-option button:hover {
     background-color: #11ced1;
+}
+
+/* تحسينات التجاوب للشاشات الصغيرة */
+@media screen and (max-width: 768px) {
+    .donation-modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .donation-options {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .donation-option {
+        width: 100%;
+        max-width: 400px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .donation-modal-content {
+        padding: 15px;
+    }
+
+    .close-donation-modal {
+        top: 10px;
+        right: 10px;
+        font-size: 25px;
+    }
+
+    .donation-option {
+        padding: 15px;
+    }
+
+    .donation-option i {
+        font-size: 40px;
+    }
 }
 
 .message {
@@ -483,4 +519,16 @@ body {
 .message.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+.donation-icon {
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 1.2em;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+
+.donation-icon:hover {
+    color: #0056b3;
 }
