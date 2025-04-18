@@ -142,7 +142,6 @@ multidict==6.1.0
 networkx==3.4.2
 nltk==3.9.1
 numba==0.61.0
-numpy==2.2.4
 openai==1.68.2
 opencv-python==4.11.0.86
 openpyxl==3.1.5
