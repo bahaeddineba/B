@@ -288,19 +288,5 @@ def migrate_db(app):
         
         except Exception as e:
             print(f"حدث خطأ أثناء الترحيل: {e}")
-            # إعادة إنشاء قاعدة البيانات إذا فشل الترحيل
-            init_db(app)
-
-# دالة لإنشاء جداول قاعدة البيانات
-def init_db(app):
-    with app.app_context():
-        # حذف جميع الجداول الموجودة
-        db.drop_all()
-        
-        # إنشاء الجداول من جديد
-        db.create_all()
-        
-        print("تمت إعادة إنشاء قاعدة البيانات بنجاح")
-
 # تصدير كائنات محددة بشكل صريح
 database = db
