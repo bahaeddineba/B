@@ -15,7 +15,7 @@ import google.generativeai as genai
 from gtts import gTTS
 import pygame
 from config import Config
-from models import database as db, User, Doctor, init_db, migrate_db, Appointment, AppointmentModification, AppointmentCancellation
+from models import database as db, User, Doctor, migrate_db, Appointment, AppointmentModification, AppointmentCancellation
 from auth import manage_sensitive_keys, retrieve_sensitive_key, auth as auth_blueprint
 from datetime import datetime, timedelta, date as dt
 load_dotenv(dotenv_path='ai.env', override=True)
@@ -32,7 +32,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///medical_assistant.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24)
 db.init_app(app)
-init_db(app)
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.init_app(app)
@@ -221,7 +220,7 @@ def initialize_ai():
         
         api_keys = [
             os.environ.get(f'GOOGLE_API_KEY_{i}') 
-            for i in range(1, 32)
+            for i in range(1, 17)
         ]
         
         valid_keys = [key for key in api_keys if key and key.strip()]
@@ -768,7 +767,7 @@ def book_appointment():
         if not availability_result[0]:
             return jsonify({
                 'status': 'error',
-                'message': 'اليوم او الساعة ليست ضمن نطاق عمل الطبيب تحقق من اللوحة',
+                'message': 'الطبيب غير متاح',
                 'details': availability_result[1],
                 'doctor_details': {
                     'work_days': doctor.work_days,
@@ -1251,19 +1250,8 @@ def find_similar_doctors(name, specialty):
         } for doctor in similar_doctors
     ]
 
-def create_initial_data():
-    with app.app_context():
-        db.drop_all()
-        
-        db.create_all()
-        
-        insert_doctors()
-        
-        check_doctors_data()
-        
-        print("تمت إعادة إنشاء قاعدة البيانات بنجاح")
+
 
 if __name__ == '__main__':
-    create_initial_data()
     migrate_db(app)
     app.run(debug=True)
